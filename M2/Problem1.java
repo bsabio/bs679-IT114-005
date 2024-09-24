@@ -26,8 +26,6 @@ public class Problem1 {
         // Goal: output only add *values* of each passed array
         //TODO add/edit code here
         
-
-
         //Brandon Sabio, IT114-005
         int a = 0;
         ArrayList<Integer> odd = new ArrayList<>();
