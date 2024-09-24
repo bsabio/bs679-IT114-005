@@ -1,4 +1,5 @@
 package M2; // Important: the package corresponds to the folder it resides in
+import java.util.ArrayList;
 import java.util.Arrays;
 
 // usage
@@ -25,8 +26,21 @@ public class Problem1 {
         // Goal: output only add *values* of each passed array
         //TODO add/edit code here
         
+
+
+        //Brandon Sabio, IT114-005
+        int a = 0;
+        ArrayList<Integer> odd = new ArrayList<>();
+        while(a < 1){
+            for(int i = 0;i < arr.length;i++){
+                if(arr[i]%2 != 0){
+                    odd.add(arr[i]);
+                }
+            }
+            a+=1;
+        }
         //end add/edit section
-        System.out.println();
+        System.out.println(odd);
         System.out.println("End process");
     }
     
