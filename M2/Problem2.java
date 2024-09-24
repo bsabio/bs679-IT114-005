@@ -1,4 +1,5 @@
 package M2; // Important: the package corresponds to the folder it resides in
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 // usage
@@ -28,9 +29,13 @@ public class Problem2 {
         //TODO add/edit code here
 
         //Brandon Sabio IT114-005
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
         for(int i = 0;i < arr.length;i++){
            total = arr[i] + total;
+            
         }
+        System.out.println(df.format(total));
         //set the double to a string variable
         //TODO ensure rounding is to two decimal places (i.e., 0.10, 0.01, 1.00)
         totalOutput = total+"";

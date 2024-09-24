@@ -27,9 +27,11 @@ public class Problem3 {
         //TODO convert each value to positive
         //set the result to the proper index of the output array and maintain the original data type
         //hint: don't forget to handle the data types properly, the result datatype should be the same as the original datatype
+        
         for(int i = 0;i < arr.length;i++){
             output[i] = arr[i];
             if(arr[i]instanceof Number){
+                Number num = (Number)arr[i];
                 
             }
         }
