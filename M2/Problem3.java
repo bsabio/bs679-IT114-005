@@ -32,7 +32,24 @@ public class Problem3 {
             output[i] = arr[i];
             if(arr[i]instanceof Number){
                 Number num = (Number)arr[i];
-                
+                if(num.doubleValue() < 0){
+
+                    if(arr[i] instanceof Integer){
+                        output[i] = Math.abs(num.intValue());
+                    }
+
+                    else if(arr[i] instanceof Float){
+                        output[i] = Math.abs(num.floatValue());
+                    }
+
+                    else if(arr[i] instanceof Double){
+                        output[i] = Math.abs(num.doubleValue());
+                    }
+
+                    else if(arr[i] instanceof Long){
+                        output[i] = Math.abs(num.longValue());
+                    }
+                }
             }
         }
         //end edit section
