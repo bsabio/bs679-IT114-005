@@ -19,7 +19,7 @@ public class NumberGuesser4 {
 
     
     private void saveState() {
-        String[] data = { level + "", strikes + "", number + "", maxLevel + "" };
+        String[] data = { level + "", strikes + "", number + "", maxLevel + "" + maxStrikes + ""};
         String output = String.join(",", data);
         // Note: we don't need a file reference as FileWriter creates the file if it
         // doesn't exist
@@ -121,6 +121,26 @@ public class NumberGuesser4 {
         }
     }
 
+    private void difficulty(){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("enter difficulty: easy, medium, hard");
+        String choice = scan.nextLine();
+        
+        if(choice.equals("easy")){
+            this.maxStrikes = 10;
+        }
+        else if(choice.equals("medium")){
+            this.maxStrikes = 5;
+        }
+        else if(choice.equals("easy")){
+            this.maxStrikes = 3;
+        }
+        else{
+            lose();
+        }
+
+        this.maxStrikes = maxStrikes;
+    }
     private void processGuess(int guess) {
         if (guess < 0) {
             return;
@@ -130,12 +150,6 @@ public class NumberGuesser4 {
             win();
             pickNewRandom = true;
         } 
-        else if(guess < number){
-            System.out.println("guess higher");
-        }
-        else if(guess > number){
-            System.out.println("guess lower");
-        }
         else {
             System.out.println("That's wrong");
             strikes++;
@@ -143,7 +157,13 @@ public class NumberGuesser4 {
                 lose();
                 pickNewRandom = true; 
             }
-
+        //Brandon Sabio bs679 IT114-005 10/1/24
+            if(guess < number){
+                System.out.println("guess higher");
+            }
+            if(guess > number){
+                System.out.println("guess lower");
+            }
         }
         saveState();
     }
@@ -164,7 +184,8 @@ public class NumberGuesser4 {
         try (Scanner input = new Scanner(System.in);) {
             System.out.println("Welcome to NumberGuesser4.0");
             System.out.println("To exit, type the word 'quit'.");
-            loadState();
+            difficulty();
+            //loadState();
             do {
                 if (pickNewRandom) {
                     generateNewNumber(level);
