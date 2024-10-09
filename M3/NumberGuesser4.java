@@ -121,6 +121,7 @@ public class NumberGuesser4 {
         }
     }
 
+
     private void difficulty(){
         Scanner scan = new Scanner(System.in);
         System.out.println("enter difficulty: easy, medium, hard");
