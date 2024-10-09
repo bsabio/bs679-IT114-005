@@ -121,7 +121,7 @@ public class NumberGuesser4 {
         }
     }
 
-    //Brandon Sabio bs679 IT114-005
+
     private void difficulty(){
         Scanner scan = new Scanner(System.in);
         System.out.println("enter difficulty: easy, medium, hard");
