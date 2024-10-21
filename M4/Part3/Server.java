@@ -137,4 +137,8 @@ public class Server {
         server.start(port);
         System.out.println("Server Stopped");
     }
+    public void broadcast(String result, long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'broadcast'");
+    }
 }
