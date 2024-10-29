@@ -14,6 +14,7 @@ public enum Server {
     private boolean isRunning = true;
     private long nextClientId = 1;
 
+    //bs679-IT114-005, 10-28-24
     private Server(){
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("JVM is shutting down. Perform cleanup tasks.");
@@ -86,6 +87,7 @@ public enum Server {
      * @param name Unique name of the room
      * @return true if it was created and false if it wasn't
      */
+    //bs679-IT114-005, 10-27-2024
     protected boolean createRoom(String name) {
         final String nameCheck = name.toLowerCase();
         if (rooms.containsKey(nameCheck)) {
@@ -104,6 +106,7 @@ public enum Server {
      * @param client the client moving
      * @return true if the move was successful, false otherwise
      */
+    //bs679-IT114-005, 10-27-2024
     protected boolean joinRoom(String name, ServerThread client) {
         final String nameCheck = name.toLowerCase();
         if (!rooms.containsKey(nameCheck)) {

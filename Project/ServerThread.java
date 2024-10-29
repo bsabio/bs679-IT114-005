@@ -93,6 +93,7 @@ public class ServerThread extends BaseServerThread {
                 case MESSAGE:
                     currentRoom.sendMessage(this, payload.getMessage());
                     break;
+                    //bs679-IT114-005, 10-27-2024
                 case ROOM_CREATE:
                     currentRoom.handleCreateRoom(this, payload.getMessage());
                     break;
@@ -113,6 +114,7 @@ public class ServerThread extends BaseServerThread {
 
     // send methods to pass data back to the Client
 
+    //bs679-IT114-005
     public boolean sendClientSync(long clientId, String clientName){
         ConnectionPayload cp = new ConnectionPayload();
         cp.setClientId(clientId);
@@ -125,6 +127,7 @@ public class ServerThread extends BaseServerThread {
     /**
      * Overload of sendMessage used for server-side generated messages
      * 
+     * //bs679-IT114-005
      * @param message
      * @return @see {@link #send(Payload)}
      */
@@ -173,6 +176,8 @@ public class ServerThread extends BaseServerThread {
      * @param clientName their name
      * @return success of sending the payload
      */
+    
+    //bs679-It114-005, 10-28-24
     public boolean sendDisconnect(long clientId, String clientName) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setPayloadType(PayloadType.DISCONNECT);

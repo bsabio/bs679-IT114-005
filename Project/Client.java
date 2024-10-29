@@ -65,6 +65,7 @@ public enum Client {
      */
     private boolean connect(String address, int port) {
         try {
+            //bs679-IT114-005
             server = new Socket(address, port);
             // channel to send to server
             out = new ObjectOutputStream(server.getOutputStream());
@@ -149,6 +150,7 @@ public enum Client {
                 final String command = commandParts[0];
                 final String commandValue = commandParts.length >= 2 ? commandParts[1] : "";
                 switch (command) {
+                    //bs679-IT114-005
                     case CREATE_ROOM:
                         sendCreateRoom(commandValue);
                         wasCommand = true;
@@ -413,6 +415,7 @@ public enum Client {
         }
     }
 
+    //bs679-IT114-005
     private void processClientData(long clientId, String clientName) {
         if (myData.getClientId() == ClientData.DEFAULT_CLIENT_ID) {
             myData.setClientId(clientId);
@@ -421,6 +424,7 @@ public enum Client {
         }
     }
 
+    //bs679-IT114-005
     private void processMessage(long clientId, String message) {
         String name = knownClients.containsKey(clientId) ? knownClients.get(clientId).getClientName() : "Room";
         System.out.println(TextFX.colorize(String.format("%s: %s", name, message), Color.BLUE));
