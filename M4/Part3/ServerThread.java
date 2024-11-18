@@ -1,4 +1,4 @@
-package M4.Part3HW;
+package M4.Part3;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -85,15 +85,6 @@ public class ServerThread extends Thread {
             isRunning = true;
             onInitializationComplete.accept(this); // Notify server that initialization is complete
             String fromClient;
-            while(isRunning && (fromClient = (String) in.readObject()) != null){
-                info("recieved from client: " + fromClient);
-
-                if(fromClient.equalsIgnoreCase("flip")){
-                    String result = "result: " + (Math.random() < 0.5 ? "heads" : "tails");
-                    server.broadcast(result, clientId);
-
-            } 
-            
             /**
              * isRunning is a flag to let us manage the loop exit condition
              * fromClient (in.readObject()) is a blocking method that waits until data is received
@@ -102,8 +93,6 @@ public class ServerThread extends Thread {
             while (isRunning) {
                 try{
                     fromClient = (String) in.readObject(); // blocking method
-                    
-                    
                     if (fromClient != null) {
                         info("Received from my client: " + fromClient);
                         server.relay(fromClient, this);
@@ -147,4 +136,5 @@ public class ServerThread extends Thread {
         }
         info("ServerThread cleanup() end");
     }
+
 }
