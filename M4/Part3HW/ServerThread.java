@@ -91,7 +91,7 @@ public class ServerThread extends Thread {
                 if(fromClient.equalsIgnoreCase("flip")){
                     String result = "result: " + (Math.random() < 0.5 ? "heads" : "tails");
                     server.broadcast(result, clientId);
-                }
+
             } 
             
             /**
