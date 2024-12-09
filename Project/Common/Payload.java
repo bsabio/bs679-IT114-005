@@ -2,6 +2,7 @@ package Project.Common;
 
 import java.io.Serializable;
 
+//bs679 12-8-24
 public class Payload implements Serializable {
     private PayloadType payloadType;
     private long clientId;
@@ -42,7 +43,6 @@ public class Payload implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
-
 
 
     @Override
