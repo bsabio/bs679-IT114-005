@@ -1,7 +1,9 @@
 ./Client/Client.java
 ./Client/ClientData.java
 ./Client/ClientPlayer.java
+./Common/Cell.java
 ./Common/ConnectionPayload.java
+./Common/Grid.java
 ./Common/LoggerUtil.java
 ./Common/Payload.java
 ./Common/PayloadType.java
@@ -12,6 +14,7 @@
 ./Common/RoomResultsPayload.java
 ./Common/TextFX.java
 ./Common/TimedEvent.java
+./Common/XYPayload.java
 ./Server/BaseGameRoom.java
 ./Server/BaseServerThread.java
 ./Server/GameRoom.java
