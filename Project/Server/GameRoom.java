@@ -1,7 +1,6 @@
 package Project.Server;
 
 import Project.Common.Grid;
-import Project.Common.Cell;
 import Project.Common.LoggerUtil;
 import Project.Common.Phase;
 import Project.Common.Player;
@@ -79,7 +78,7 @@ public class GameRoom extends BaseGameRoom {
     protected void onSessionStart() {
         LoggerUtil.INSTANCE.info("onSessionStart() start");
         changePhase(Phase.IN_PROGRESS);
-        grid = new Grid(2,2);
+        grid = new Grid(2, 2);
         sendGridDimensions();
         LoggerUtil.INSTANCE.info("onSessionStart() end");
         onRoundStart();

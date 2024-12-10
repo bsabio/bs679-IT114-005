@@ -23,6 +23,7 @@ import Project.Common.RoomResultsPayload;
 import Project.Common.TextFX;
 import Project.Common.XYPayload;
 import Project.Common.TextFX.Color;
+import Project.Common.PointsPayload;
 
 /**
  * Demoing bi-directional communication between client and server in a
@@ -518,6 +519,9 @@ public enum Client {
                     ReadyPayload tp = (ReadyPayload) payload;
                     processTurnStatus(tp.getClientId(), tp.isReady());
                     break;
+                case PayloadType.POINTS:
+                PointsPayload pp = (PointsPayload) payload;
+                processPoints(pp.getClientId());
                 default:
                     break;
             }
@@ -650,6 +654,13 @@ public enum Client {
             if (clientId == myData.getClientId()) {
                 knownClients.clear();
             }
+        }
+    }
+    private void processPoints(long l){
+        PointsPayload pp = new PointsPayload();
+        if(knownClients.containsKey(pp.getClientId())){
+            ClientPlayer cpp = knownClients.get(pp.getClientId());
+            cpp.setPoints(pp.getCurrentPoints());
         }
     }
     // end payload processors
