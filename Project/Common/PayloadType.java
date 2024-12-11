@@ -14,7 +14,7 @@ public enum PayloadType {
     RESET_READY, // trigger to tell the client to reset their whole local list's ready status (saves network requests)
     PHASE, // syncs current phase of session (used as a switch to only allow certain logic to execute)
     POINTS,//syncs the points of all the players in the room
-    MOVE, //sync as a poin
+    MOVE, //sync as a point
     GRID_DIMENSION, //syncs grid dimension
     TURN, //syncs turn data
 }

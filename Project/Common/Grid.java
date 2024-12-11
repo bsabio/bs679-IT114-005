@@ -92,25 +92,26 @@ public class Grid {
      * @return true if the cell was successfully marked as occupied, false if it was already occupied.
      * @throws IndexOutOfBoundsException if the position is out of bounds.
      */
-    public boolean tryOccupyCell(int row, int col) {
+    /*public boolean tryOccupyCell(int row, int col) {
         if (row < 0 || row >= rows || col < 0 || col >= cols) {
             throw new IndexOutOfBoundsException("Cell position out of bounds");
         }
         Cell cell = cells[row][col];
         if (cell.isOccupied()) {
             return false;
-        } else {
+        } 
+        else {
             cell.setOccupied(true);
             return true;
         }
-    }
+    }*/
 
     /**
      * Checks if all cells in the grid are occupied.
      *
      * @return true if all cells are occupied, false otherwise.
      */
-    public boolean areAllCellsOccupied() {
+    /*public boolean areAllCellsOccupied() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 if (!cells[row][col].isOccupied()) {
@@ -119,7 +120,7 @@ public class Grid {
             }
         }
         return true;
-    }
+    }*/
 
     /**
      * Resets the grid by resetting all cells.
@@ -143,12 +144,12 @@ public class Grid {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Grid (").append(rows).append(" x ").append(cols).append("):\n");
-        for (int row = 0; row < rows; row++) {
+       /*  for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 sb.append(cells[row][col].isOccupied() ? "[x]" : "[ ]");
             }
             sb.append("\n");
-        }
+        }*/
         return sb.toString();
     }
 
@@ -163,10 +164,10 @@ public class Grid {
         grid.setCell(0, 2, true);
         System.out.println(grid);
 
-        System.out.println("Trying to occupy cell (1, 1): " + grid.tryOccupyCell(1, 1));
+        /*System.out.println("Trying to occupy cell (1, 1): " + grid.tryOccupyCell(1, 1));
         System.out.println("Trying to occupy cell (2, 2): " + grid.tryOccupyCell(2, 2));
         System.out.println(grid);
-        System.out.println("All cells occupied: " + grid.areAllCellsOccupied());
+        System.out.println("All cells occupied: " + grid.areAllCellsOccupied());*/
         
         grid.reset();
         System.out.println("After reset:");

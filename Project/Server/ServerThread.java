@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import Project.Common.PayloadType;
 import Project.Common.Phase;
+import Project.Common.PointsPayload;
 import Project.Common.ReadyPayload;
 import Project.Common.RoomResultsPayload;
 import Project.Common.XYPayload;
@@ -182,6 +183,15 @@ public class ServerThread extends BaseServerThread {
 
     public boolean sendReadyStatus(long clientId, boolean isReady) {
         return sendReadyStatus(clientId, isReady, false);
+    }
+
+    public boolean sendPoints(long clientId, int changedPoints, int currentPoints){
+        PointsPayload pp = new PointsPayload();
+        pp.setPayloadType(PayloadType.POINTS);
+        pp.setClientId(clientId);
+        pp.setChangedPoints(changedPoints);
+        pp.setCurrentPoints(currentPoints);
+        return send(pp);
     }
 
     /**

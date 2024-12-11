@@ -44,9 +44,9 @@ public class Cell {
      *
      * @return true if the cell is occupied, false otherwise.
      */
-    public boolean isOccupied() {
+    /*public boolean isOccupied() {
         return occupied;
-    }
+    }*/
 
     /**
      * Sets the occupied status of the cell.

@@ -78,7 +78,7 @@ public class GameRoom extends BaseGameRoom {
     protected void onSessionStart() {
         LoggerUtil.INSTANCE.info("onSessionStart() start");
         changePhase(Phase.IN_PROGRESS);
-        grid = new Grid(2, 2);
+        grid = new Grid(1, 3);
         sendGridDimensions();
         LoggerUtil.INSTANCE.info("onSessionStart() end");
         onRoundStart();
@@ -86,6 +86,8 @@ public class GameRoom extends BaseGameRoom {
 
     /** {@inheritDoc} */
     @Override
+    
+    //bs679 12-10-2024
     protected void onRoundStart() {
         LoggerUtil.INSTANCE.info("onRoundStart() start");
         resetRoundTimer();
@@ -109,7 +111,6 @@ public class GameRoom extends BaseGameRoom {
     protected void onTurnEnd() {
         LoggerUtil.INSTANCE.info("onTurnEnd() start");
         resetTurnTimer(); // reset timer if turn ended without the time expiring
-
         LoggerUtil.INSTANCE.info("onTurnEnd() end");
     }
 
@@ -131,13 +132,24 @@ public class GameRoom extends BaseGameRoom {
     @Override
     protected void onSessionEnd() {
         LoggerUtil.INSTANCE.info("onSessionEnd() start");
-        grid.reset();
+        this.grid.reset();
         resetRoundTimer(); // just in case it's still active if we forgot to end it sooner
         sendGridDimensions();
         sendResetTurnStatus();
         resetReadyStatus();
         changePhase(Phase.READY);
         LoggerUtil.INSTANCE.info("onSessionEnd() end");
+        if (this.grid == null) {
+            System.err.println("Error: Grid is null in onSessionEnd.");
+            return; // Avoid further processing
+        }
+        this.grid.reset();
+
+        if (this.grid == null) {
+            System.err.println("Error: Grid is not initialized.");
+            return; // Exit the method gracefully
+        }
+        this.grid.reset();
     }
     // end lifecycle methods
 
@@ -147,14 +159,13 @@ public class GameRoom extends BaseGameRoom {
         long tookTurn = playersInRoom.values().stream().filter(p -> p.isReady() && p.didTakeTurn()).count();
         if (ready == tookTurn) {
             // example of some end session condition 2
-            if (grid.areAllCellsOccupied()) {
+            /*if (grid.areAllCellsOccupied()) {
                 sendMessage(null, "Congrats, you filled the grid");
-                onSessionEnd();
-            } else {
+               onSessionEnd();
+            }*/ 
                 sendResetTurnStatus();
                 onRoundStart();
                 sendMessage(null, "Move again");
-            }
 
         }
     }
@@ -241,10 +252,10 @@ public class GameRoom extends BaseGameRoom {
                 st.sendMessage("You already took your turn");
                 return;
             }
-            if (grid.getCell(x, y).isOccupied()) {
+            /*if (grid.getCell(x, y).isOccupied()) {
                 st.sendMessage("This cell is already occupied");
                 return;
-            }
+            }*/
             grid.setCell(x, y, true);
             sendMove(sp, x, y);
             sp.setTakeTurn(true);

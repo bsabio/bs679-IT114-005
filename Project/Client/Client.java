@@ -63,7 +63,8 @@ public enum Client {
     private final String SINGLE_SPACE = " ";
     // other constants
     private final String READY = "ready";
-    private final String MOVE = "move";
+    //private final String MOVE = "move";
+    private final String PICK = "pick";
 
     private Grid grid = null;
 
@@ -161,21 +162,13 @@ public enum Client {
             System.out.println(TextFX.colorize("Set client name to " + myData.getClientName(), Color.CYAN));
             return true;
         } else if (text.equalsIgnoreCase("/users")) {
-            // chatroom version
-            /*
-             * System.out.println(
-             * String.join("\n", knownClients.values().stream()
-             * .map(c -> String.format("%s(%s)", c.getClientName(),
-             * c.getClientId())).toList()));
-             */
             // non-chatroom version
-            /**
-             * System.out.println(
-             * String.join("\n", knownClients.values().stream()
-             * .map(c -> String.format("%s(%s) %s", c.getClientName(), c.getClientId(),
-             * c.isReady() ? "[x]" : "[ ]"))
-             * .toList()));
-             */
+              System.out.println(
+              String.join("\n", knownClients.values().stream()
+              .map(c -> String.format("%s(%s) %s", c.getClientName(), c.getClientId(),
+              c.isReady() ? "[x]" : "[ ]"))
+              .toList()));
+             
             // updated to show turn status
             System.out.println(
                     String.join("\n", knownClients.values().stream()
@@ -219,17 +212,34 @@ public enum Client {
                         sendReady();
                         wasCommand = true;
                         break;
-                    case MOVE:
-                        try {
-                            String[] parts = commandValue.split(",");
-                            int x = Integer.parseInt(parts[0]);
-                            int y = Integer.parseInt(parts[1]);
-                            sendMove(x, y);
-                        } catch (Exception e) {
-                            System.out.println(TextFX.colorize("Invalid command format, try /move #,#", Color.RED));
+                    case PICK:
+                    try{
+                        if(commandValue.equalsIgnoreCase("r")){
+                            sendMove(0,0);
                         }
-                        wasCommand = true;
-                        break;
+                        if(commandValue.equalsIgnoreCase("p")){
+                            sendMove(0,1);
+                        }
+                        if(commandValue.equalsIgnoreCase("s")){
+                            sendMove(0,2);
+                        }
+                        
+                    } catch(Exception e){
+                        System.out.println("invalid format. Try /pick r,p, or s");
+                    }
+                    wasCommand = true;
+                    break;
+                    /*case MOVE:
+                    *    try {
+                    *        String[] parts = commandValue.split(",");
+                    *        int x = Integer.parseInt(parts[0]);
+                    *        int y = Integer.parseInt(parts[1]);
+                    *        sendMove(x, y);
+                    *    } catch (Exception e) {
+                    *        System.out.println(TextFX.colorize("Invalid command format, try /move #,#", Color.RED));
+                    *    }
+                    *    wasCommand = true;
+                        break;*/
                 }
                 return wasCommand;
             }
@@ -241,11 +251,11 @@ public enum Client {
 
     private void sendMove(int x, int y) {
         // check local grid first
-        if (grid.getCell(x, y).isOccupied()) {
+        /*if (grid.getCell(x, y).isOccupied()) {
             System.out
                     .println(TextFX.colorize("That coordinate is already occupied, please try another", Color.YELLOW));
             return;
-        }
+        }*/
         XYPayload p = new XYPayload(x, y);
         p.setPayloadType(PayloadType.MOVE);
         send(p);
@@ -552,7 +562,7 @@ public enum Client {
         cp.setTakeTurn(didTakeTurn);
         if (didTakeTurn) {
             System.out
-                    .println(TextFX.colorize(String.format("%s finished their turn", cp.getClientName()), Color.CYAN));
+                    .println(TextFX.colorize(String.format("%s picked their choice", cp.getClientName()), Color.CYAN));
         }
     }
 
@@ -562,7 +572,7 @@ public enum Client {
         } else {
             grid.reset();
         }
-        LoggerUtil.INSTANCE.info("Grid: " + grid);
+        //LoggerUtil.INSTANCE.info("Grid: " + grid);
     }
 
     private void processPhase(String phase) {
@@ -661,6 +671,7 @@ public enum Client {
         if(knownClients.containsKey(pp.getClientId())){
             ClientPlayer cpp = knownClients.get(pp.getClientId());
             cpp.setPoints(pp.getCurrentPoints());
+            LoggerUtil.INSTANCE.info("current points" + pp.getCurrentPoints());
         }
     }
     // end payload processors
