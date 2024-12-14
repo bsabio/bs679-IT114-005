@@ -17,4 +17,5 @@ public enum PayloadType {
     MOVE, //sync as a point
     GRID_DIMENSION, //syncs grid dimension
     TURN, //syncs turn data
+    PICK,
 }

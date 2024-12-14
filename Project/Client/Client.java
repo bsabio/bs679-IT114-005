@@ -18,6 +18,7 @@ import Project.Common.LoggerUtil;
 import Project.Common.Payload;
 import Project.Common.PayloadType;
 import Project.Common.Phase;
+import Project.Common.PickPayload;
 import Project.Common.ReadyPayload;
 import Project.Common.RoomResultsPayload;
 import Project.Common.TextFX;
@@ -216,6 +217,7 @@ public enum Client {
                     try{
                         if(commandValue.equalsIgnoreCase("r")){
                             sendMove(0,0);
+
                         }
                         if(commandValue.equalsIgnoreCase("p")){
                             sendMove(0,1);
@@ -259,6 +261,12 @@ public enum Client {
         XYPayload p = new XYPayload(x, y);
         p.setPayloadType(PayloadType.MOVE);
         send(p);
+    }
+
+    public void sendPick(String pick){
+        PickPayload pickP = new PickPayload(pick);
+        pickP.setPayloadType(PayloadType.PICK);
+        send(pickP);
     }
 
     /**

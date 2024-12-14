@@ -8,6 +8,7 @@
 ./Common/Payload.java
 ./Common/PayloadType.java
 ./Common/Phase.java
+./Common/PickPayload.java
 ./Common/Player.java
 ./Common/PointsPayload.java
 ./Common/ReadyPayload.java

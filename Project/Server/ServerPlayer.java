@@ -35,6 +35,9 @@ public class ServerPlayer extends Player {
     public boolean sendMove(long clientId, int x, int y){
         return client.sendMove(clientId, x, y);
     }
+    public boolean sendPick(long clientId, String pick){
+        return client.sendPick(clientId, pick);
+    }
     public boolean sendTurnStatus(long clientId, boolean didTakeTurn){
         return client.sendTurnStatus(clientId, didTakeTurn);
     }
@@ -57,4 +60,8 @@ public class ServerPlayer extends Player {
     public boolean sendCurrentPhase(Phase phase) {
         return client.sendCurrentPhase(phase);
     }
+
+    public boolean sendPoints(long clientId,int points){
+      return client.sendPoints(clientId, points, points);
+    }    
 }

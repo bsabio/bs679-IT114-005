@@ -19,9 +19,9 @@ public void setChangedPoints(int changedPoints){
     
     }
 
-    public int getCurrentPoints(){
-        return currentPoints;
-    }
+public int getCurrentPoints(){
+    return currentPoints;
+}
 
 public void setCurrentPoints(int currentPoints){
     this.currentPoints = currentPoints;

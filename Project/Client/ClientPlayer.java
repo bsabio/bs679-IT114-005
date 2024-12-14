@@ -29,8 +29,7 @@ public class ClientPlayer extends Player {
     }
 
     public void setPoints(int currentPoints) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPoints'");
+        this.setPoints(currentPoints);
     }
 }
 

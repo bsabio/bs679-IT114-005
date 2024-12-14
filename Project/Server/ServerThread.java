@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import Project.Common.PayloadType;
 import Project.Common.Phase;
+import Project.Common.PickPayload;
 import Project.Common.PointsPayload;
 import Project.Common.ReadyPayload;
 import Project.Common.RoomResultsPayload;
@@ -152,6 +153,13 @@ public class ServerThread extends BaseServerThread {
         p.setPayloadType(PayloadType.MOVE);
         p.setClientId(clientId);
         return send(p);
+    }
+
+    public boolean sendPick(long clientId, String pick){
+        PickPayload pickP = new PickPayload(pick);
+        pickP.setPayloadType(PayloadType.PICK);
+        pickP.setClientId(clientId);
+        return send(pickP);
     }
 
     public boolean sendTurnStatus(long clientId, boolean didTakeTurn){
