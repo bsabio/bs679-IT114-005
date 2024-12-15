@@ -63,5 +63,5 @@ public class ServerPlayer extends Player {
 
     public boolean sendPoints(long clientId,int points){
       return client.sendPoints(clientId, points, points);
-    }    
+    }  
 }

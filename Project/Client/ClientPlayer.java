@@ -13,6 +13,7 @@ import Project.Common.Player;
  */
 public class ClientPlayer extends Player {
     private String clientName;
+    private String pick;
 
     public String getClientName() {
         return clientName;
@@ -30,6 +31,14 @@ public class ClientPlayer extends Player {
 
     public void setPoints(int currentPoints) {
         this.setPoints(currentPoints);
+    }
+
+    public String getPick(){
+        return pick;
+    }
+
+    public void setPick(String pick){
+        this.pick = pick;
     }
 }
 

@@ -217,13 +217,18 @@ public enum Client {
                     try{
                         if(commandValue.equalsIgnoreCase("r")){
                             sendMove(0,0);
-
+                            sendPick("r");
+                            return true;
                         }
                         if(commandValue.equalsIgnoreCase("p")){
                             sendMove(0,1);
+                            sendPick("p");
+                            return true;
                         }
                         if(commandValue.equalsIgnoreCase("s")){
                             sendMove(0,2);
+                            sendPick("s");
+                            return true;
                         }
                         
                     } catch(Exception e){
@@ -265,6 +270,8 @@ public enum Client {
 
     public void sendPick(String pick){
         PickPayload pickP = new PickPayload(pick);
+        myData.setPick(pick);
+        pickP.setPick(myData.getPick());
         pickP.setPayloadType(PayloadType.PICK);
         send(pickP);
     }

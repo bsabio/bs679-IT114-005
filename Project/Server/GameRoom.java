@@ -1,8 +1,5 @@
 package Project.Server;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 import Project.Common.Grid;
@@ -309,7 +306,6 @@ public class GameRoom extends BaseGameRoom {
 
     // end receive data from ServerThread (GameRoom specific)
     //methods to run the games
-    private Map<Integer, String> playerPicks = new HashMap<>();
 
     public void handlePick(ServerThread st, String pick){
         try {
@@ -326,7 +322,9 @@ public class GameRoom extends BaseGameRoom {
                 return;
             }
             sendPick(sp, pick);
+            
             sp.getPick();
+            st.setPick(pick);
    
             LoggerUtil.INSTANCE.info("Player " + sp.getClientId() + " picked: " + pick.toUpperCase());
    
@@ -347,12 +345,7 @@ public class GameRoom extends BaseGameRoom {
                     ServerPlayer player1 = activePlayers.get(i);
                     ServerPlayer player2 = activePlayers.get(a);
 
-
-                    String pick1 = playerPicks.get((int)player1.getClientId());
-                    String pick2 = playerPicks.get((int)player2.getClientId());
-
-
-                    String result = determineBattle(player1,pick1,player2,pick2);
+                    String result = determineBattle(player1,player2);
 
 
                     sendMessage(null, result);
@@ -371,7 +364,10 @@ public class GameRoom extends BaseGameRoom {
         }
 
 
-        private String determineBattle(ServerPlayer player1, String pick1,ServerPlayer player2, String pick2){
+        private String determineBattle(Player player1, Player player2){
+
+            String pick1 = player1.getPick();
+            String pick2 = player2.getPick();
 
             if (pick1 == null || pick2 == null) {
                 LoggerUtil.INSTANCE.severe("Invalid picks: pick1=" + pick1 + ", pick2=" + pick2);

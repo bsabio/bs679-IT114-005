@@ -27,6 +27,7 @@ public class ServerThread extends BaseServerThread {
     private long clientId;
     private String clientName;
     private Consumer<ServerThread> onInitializationComplete; // callback to inform when this object is ready
+    private String pick;
 
     /**
      * Wraps the Socket connection and takes a Server reference and a callback
@@ -72,6 +73,14 @@ public class ServerThread extends BaseServerThread {
             throw new NullPointerException("Room argument can't be null");
         }
         currentRoom = room;
+    }
+
+    public String setPick(String pick){
+        return pick;
+    }
+
+    public void getPick(){
+        this.pick = pick;
     }
 
     @Override
@@ -138,6 +147,13 @@ public class ServerThread extends BaseServerThread {
                         sendMessage("You must be in a GameRoom to move");
                     }
                     break;
+                case PICK:
+                   try{
+                    PickPayload pickP = (PickPayload) payload;
+                    ((GameRoom)currentRoom).handlePick(this,pickP.getPick());
+                   }catch(Exception e){
+                    sendMessage("you must be in a gameroom to make a pick");
+                   }
                 default:
                     break;
             }
