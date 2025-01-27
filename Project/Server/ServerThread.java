@@ -1,8 +1,21 @@
-package Project;
+package Project.Server;
 
 import java.net.Socket;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import Project.Common.PayloadType;
+import Project.Common.Phase;
+import Project.Common.PickPayload;
+import Project.Common.PointsPayload;
+import Project.Common.ReadyPayload;
+import Project.Common.RoomResultsPayload;
+import Project.Common.XYPayload;
+import Project.Common.Payload;
+
+import Project.Common.ConnectionPayload;
+import Project.Common.LoggerUtil;
 
 /**
  * A server-side representation of a single client.
@@ -14,6 +27,7 @@ public class ServerThread extends BaseServerThread {
     private long clientId;
     private String clientName;
     private Consumer<ServerThread> onInitializationComplete; // callback to inform when this object is ready
+    private String pick;
 
     /**
      * Wraps the Socket connection and takes a Server reference and a callback
@@ -41,7 +55,8 @@ public class ServerThread extends BaseServerThread {
         this.clientName = name;
         onInitialized();
     }
-    public String getClientName(){
+
+    public String getClientName() {
         return clientName;
     }
 
@@ -60,6 +75,14 @@ public class ServerThread extends BaseServerThread {
         currentRoom = room;
     }
 
+    public String setPick(String pick){
+        return pick;
+    }
+
+    public void getPick(){
+        this.pick = pick;
+    }
+
     @Override
     protected void onInitialized() {
         onInitializationComplete.accept(this); // Notify server that initialization is complete
@@ -67,7 +90,7 @@ public class ServerThread extends BaseServerThread {
 
     @Override
     protected void info(String message) {
-        System.out.println(String.format("ServerThread[%s(%s)]: %s", getClientName(), getClientId(), message));
+        LoggerUtil.INSTANCE.info(String.format("ServerThread[%s(%s)]: %s", getClientName(), getClientId(), message));
     }
 
     @Override
@@ -75,12 +98,13 @@ public class ServerThread extends BaseServerThread {
         currentRoom = null;
         super.cleanup();
     }
-    
+
     @Override
-    protected void disconnect(){
-        //sendDisconnect(clientId, clientName);
+    protected void disconnect() {
+        // sendDisconnect(clientId, clientName);
         super.disconnect();
     }
+
     // handle received message from the Client
     @Override
     protected void processPayload(Payload payload) {
@@ -93,29 +117,133 @@ public class ServerThread extends BaseServerThread {
                 case MESSAGE:
                     currentRoom.sendMessage(this, payload.getMessage());
                     break;
-                    //bs679-IT114-005, 10-27-2024
                 case ROOM_CREATE:
                     currentRoom.handleCreateRoom(this, payload.getMessage());
                     break;
                 case ROOM_JOIN:
                     currentRoom.handleJoinRoom(this, payload.getMessage());
                     break;
+                case ROOM_LIST:
+                    currentRoom.handleListRooms(this, payload.getMessage());
+                    break;
                 case DISCONNECT:
                     currentRoom.disconnect(this);
                     break;
+                case READY:
+                    // no data needed as the intent will be used as the trigger
+                    try {
+                        // cast to GameRoom as the subclass will handle all Game logic
+                        ((GameRoom) currentRoom).handleReady(this);
+                    } catch (Exception e) {
+                        sendMessage("You must be in a GameRoom to do the ready check");
+                    }
+                    break;
+                case MOVE:
+                    try {
+                        // cast to GameRoom as the subclass will handle all Game logic
+                        XYPayload movePayload = (XYPayload)payload;
+                        ((GameRoom) currentRoom).handleMove(this, movePayload.getX(), movePayload.getY());
+                    } catch (Exception e) {
+                        sendMessage("You must be in a GameRoom to move");
+                    }
+                    break;
+                case PICK:
+                   try{
+                    PickPayload pickP = (PickPayload) payload;
+                    ((GameRoom)currentRoom).handlePick(this,pickP.getPick());
+                   }catch(Exception e){
+                    sendMessage("you must be in a gameroom to make a pick");
+                   }
                 default:
                     break;
             }
         } catch (Exception e) {
-            System.out.println("Could not process Payload: " + payload);
-            e.printStackTrace();
+            LoggerUtil.INSTANCE.severe("Could not process Payload: " + payload, e);
+
         }
     }
 
+    // send methods specific to non-chatroom projects
+    public boolean sendMove(long clientId, int x, int y){
+        XYPayload p = new XYPayload(x, y);
+        p.setPayloadType(PayloadType.MOVE);
+        p.setClientId(clientId);
+        return send(p);
+    }
+
+    public boolean sendPick(long clientId, String pick){
+        PickPayload pickP = new PickPayload(pick);
+        pickP.setPayloadType(PayloadType.PICK);
+        pickP.setClientId(clientId);
+        return send(pickP);
+    }
+
+    public boolean sendTurnStatus(long clientId, boolean didTakeTurn){
+        ReadyPayload rp = new ReadyPayload();
+        rp.setPayloadType(PayloadType.TURN);
+        rp.setReady(didTakeTurn);
+        rp.setClientId(clientId);
+        return send(rp);
+    }
+
+    public boolean sendGridDimensions(int x, int y) {
+        XYPayload p = new XYPayload(x, y);
+        p.setPayloadType(PayloadType.GRID_DIMENSION);
+        return send(p);
+    }
+
+    public boolean sendCurrentPhase(Phase phase) {
+        Payload p = new Payload();
+        p.setPayloadType(PayloadType.PHASE);
+        p.setMessage(phase.name());
+        return send(p);
+    }
+
+    public boolean sendResetReady() {
+        ReadyPayload rp = new ReadyPayload();
+        rp.setPayloadType(PayloadType.RESET_READY);
+        return send(rp);
+    }
+
+    public boolean sendReadyStatus(long clientId, boolean isReady) {
+        return sendReadyStatus(clientId, isReady, false);
+    }
+
+    public boolean sendPoints(long clientId, int changedPoints, int currentPoints){
+        PointsPayload pp = new PointsPayload();
+        pp.setPayloadType(PayloadType.POINTS);
+        pp.setClientId(clientId);
+        pp.setChangedPoints(changedPoints);
+        pp.setCurrentPoints(currentPoints);
+        return send(pp);
+    }
+
+    /**
+     * Sync ready status of client id
+     * 
+     * @param clientId who
+     * @param isReady  ready or not
+     * @param quiet    silently mark ready
+     * @return
+     */
+    public boolean sendReadyStatus(long clientId, boolean isReady, boolean quiet) {
+        ReadyPayload rp = new ReadyPayload();
+        rp.setClientId(clientId);
+        rp.setReady(isReady);
+        if (quiet) {
+            rp.setPayloadType(PayloadType.SYNC_READY);
+        }
+        return send(rp);
+    }
     // send methods to pass data back to the Client
 
-    //bs679-IT114-005
-    public boolean sendClientSync(long clientId, String clientName){
+    public boolean sendRooms(List<String> rooms) {
+        RoomResultsPayload rrp = new RoomResultsPayload();
+        rrp.setRooms(rooms);
+        return send(rrp);
+    }
+
+    public boolean sendClientSync(long clientId, String clientName) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setClientId(clientId);
         cp.setClientName(clientName);
@@ -127,7 +255,6 @@ public class ServerThread extends BaseServerThread {
     /**
      * Overload of sendMessage used for server-side generated messages
      * 
-     * //bs679-IT114-005
      * @param message
      * @return @see {@link #send(Payload)}
      */
@@ -162,7 +289,7 @@ public class ServerThread extends BaseServerThread {
     public boolean sendRoomAction(long clientId, String clientName, String room, boolean isJoin) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setPayloadType(PayloadType.ROOM_JOIN);
-        cp.setConnect(isJoin); //<-- determine if join or leave
+        cp.setConnect(isJoin); // <-- determine if join or leave
         cp.setMessage(room);
         cp.setClientId(clientId);
         cp.setClientName(clientName);
@@ -176,8 +303,6 @@ public class ServerThread extends BaseServerThread {
      * @param clientName their name
      * @return success of sending the payload
      */
-    
-    //bs679-It114-005, 10-28-24
     public boolean sendDisconnect(long clientId, String clientName) {
         ConnectionPayload cp = new ConnectionPayload();
         cp.setPayloadType(PayloadType.DISCONNECT);
